@@ -4,6 +4,8 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
+const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -11,9 +13,10 @@ function resolve (dir) {
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
+  entry: [
+    require.resolve( 'regenerator-runtime/runtime.js' ),
+    './src/main.js'
+],
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -38,7 +41,14 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [
+          resolve('src'),
+          resolve('test')
+        ],
+        options: {
+          configFile: resolve('babel.config.js')
+          // filename: '../.babelrc'
+        }
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -64,10 +74,45 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       },
+      {
+        test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+        use: [ 'raw-loader' ]
+      },
+      {
+        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+        use: [
+          {
+            loader: 'style-loader',
+            options: {
+              injectType: 'singletonStyleTag'
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: styles.getPostCssConfig( {
+              themeImporter: {
+                themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+              },
+              minify: true
+            })
+          },
+        ]
+      },
+      {
+        test: /ckeditor5-[^\/\\]+[\/\\].+\.js$/,
+        loader: 'babel-loader',
+        options: {
+          // ckeditor官方那种require配置的写法不能用的，格式是错的，那种应该是其他版本的webpack中babel的配置
+          presets: ['@babel/preset-env']
+        }
+      },
     ]
   },
   plugins: [
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new CKEditorWebpackPlugin({
+      language: 'en'
+    })
   ],
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue

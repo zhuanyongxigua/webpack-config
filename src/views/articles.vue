@@ -144,7 +144,7 @@
                 </div>
               </div>
 
-              <div class="flex_row form_row">
+              <!-- <div class="flex_row form_row">
                 <div class="form_label">简介</div>
                 <div class="flex1 form_item">
                   <FormItem prop="content">
@@ -157,9 +157,9 @@
                     />
                   </FormItem>
                 </div>
-              </div>
+              </div> -->
               
-              <!-- <div class="flex_row form_row">
+              <div class="flex_row form_row">
                 <div class="form_label">富文本</div>
                 <div class="flex1 form_item">
                   <FormItem prop="content">
@@ -167,7 +167,7 @@
                     </editor>
                   </FormItem>
                 </div>
-              </div> -->
+              </div>
 
             </div>
           </div>
@@ -197,14 +197,14 @@ import { BASEURL } from '../libs/util'
 import axios from 'axios'
 import DelModal from '../components/delModal'
 import Uploader from '../components/uploader'
-// import Editor from '../components/editor'
+import Editor from '../components/editor'
 export default {
   name: 'articles',
   inject: ['app'],
   components: {
     DelModal,
     Uploader,
-    // Editor
+    Editor
   },
   data() {
     return {
