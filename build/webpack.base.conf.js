@@ -4,11 +4,14 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
-const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
+const CKEditorWebpackPlugin = require('@ckeditor/ckeditor5-dev-webpack-plugin')
+const { styles } = require('@ckeditor/ckeditor5-dev-utils')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 function resolve (dir) {
-  return path.join(__dirname, '..', dir)
+  var temp = path.join(__dirname, '..', dir)
+  console.log(temp)
+  return temp
 }
 
 module.exports = {
@@ -16,7 +19,8 @@ module.exports = {
   entry: [
     require.resolve( 'regenerator-runtime/runtime.js' ),
     './src/main.js'
-],
+  ],
+  // entry: './src/main.js',
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -36,15 +40,15 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueLoaderConfig
+        // options: vueLoaderConfig
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [
-          resolve('src'),
-          resolve('test')
-        ],
+        // include: [
+        //   resolve('src'),
+        //   resolve('test')
+        // ],
         options: {
           configFile: resolve('babel.config.js')
           // filename: '../.babelrc'
@@ -53,6 +57,9 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: [
+          resolve('node_modules/@ckeditor')
+        ],
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -79,39 +86,43 @@ module.exports = {
         use: [ 'raw-loader' ]
       },
       {
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+        // test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+        test: /ckeditor5-[^\/\\]+[\/\\].+\.css$/,
         use: [
-          {
-            loader: 'style-loader',
-            options: {
-              injectType: 'singletonStyleTag'
-            }
-          },
+          // {
+          //   loader: 'style-loader',
+          //   options: {
+          //     injectType: 'singletonStyleTag'
+          //   }
+          // },
           {
             loader: 'postcss-loader',
             options: styles.getPostCssConfig({
               themeImporter: {
-                themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
               },
               minify: true
             })
           },
         ]
       },
-      {
-        test: /ckeditor5-[^\/\\]+[\/\\].+\.js$/,
-        loader: 'babel-loader',
-        options: {
-          // ckeditor官方那种require配置的写法不能用的，格式是错的，那种应该是其他版本的webpack中babel的配置
-          presets: ['@babel/preset-env']
-        }
-      },
+      // {
+      //   test: /ckeditor5-[^\/\\]+[\/\\].+\.js$/,
+      //   loader: 'babel-loader',
+      //   options: {
+      //     // ckeditor官方那种require配置的写法不能用的，格式是错的，那种应该是其他版本的webpack中babel的配置
+      //     presets: ['@babel/preset-env']
+      //   }
+      // },
     ]
   },
   plugins: [
     new VueLoaderPlugin(),
     new CKEditorWebpackPlugin({
       language: 'en'
+    }),
+    new MiniCssExtractPlugin( {
+      filename: 'styles.css'
     })
   ],
   node: {
