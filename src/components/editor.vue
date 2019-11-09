@@ -1,6 +1,3 @@
-<style scoped>
-
-</style>
 <template>
   <ckeditor :editor="editor" :value="value" @input="changeEditorData" :config="editorConfig"></ckeditor>
 </template>
