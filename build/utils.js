@@ -78,6 +78,8 @@ exports.styleLoaders = function (options) {
       use: loader
     })
   }
+  // output[0].exclude = [path.join(__dirname, '..', 'node_modules/@ckeditor')]
+  // console.log('output',JSON.stringify(output))
 
   return output
 }

@@ -14,6 +14,14 @@ function resolve (dir) {
   return temp
 }
 
+var postCssOptions = styles.getPostCssConfig({
+  themeImporter: {
+    themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
+  },
+  minify: true
+})
+postCssOptions.parser = 'postcss-scss'
+
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: [
@@ -45,10 +53,11 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        // include: [
-        //   resolve('src'),
-        //   resolve('test')
-        // ],
+        include: [
+          resolve('src'),
+          resolve('test'),
+          resolve('node_modules/@ckeditor')
+        ],
         options: {
           configFile: resolve('babel.config.js')
           // filename: '../.babelrc'
@@ -86,8 +95,8 @@ module.exports = {
         use: [ 'raw-loader' ]
       },
       {
-        // test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-        test: /ckeditor5-[^\/\\]+[\/\\].+\.css$/,
+        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+        // test: /ckeditor5-[^\/\\]+[\/\\].+\.css$/,
         use: [
           // {
           //   loader: 'style-loader',
@@ -97,12 +106,7 @@ module.exports = {
           // },
           {
             loader: 'postcss-loader',
-            options: styles.getPostCssConfig({
-              themeImporter: {
-                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
-              },
-              minify: true
-            })
+            options: postCssOptions
           },
         ]
       },
