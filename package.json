@@ -37,7 +37,7 @@
     "@ckeditor/ckeditor5-typing": "^12.1.1",
     "@ckeditor/ckeditor5-ui": "^15.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.0-beta.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "core-js": "^3.4.0",
     "iview": "^3.4.2",
     "vue": "^2.5.2",
